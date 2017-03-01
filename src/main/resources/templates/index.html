@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>3rd Part Secured App</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p>
+    User <strong th:text="${user}">user</strong> messages:
+</p>
+<p th:each="message, stat : ${session.messages}" th:text="${stat.count} + ': ' + ${message}"></p>
+<p>
+    <form th:action="@{/}" method="POST">
+        <input type="text" name="message"/>
+        <input type="submit" value="Add message"/>
+    </form>
+</p>
+</body>
+</html>
