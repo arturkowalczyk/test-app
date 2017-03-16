@@ -1,5 +1,6 @@
 package com.shc.testapp;
 
+import com.hazelcast.config.JoinConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class HazelcastHttpSessionConfiguration
 {
     public static final String NAMESPACE = "spring:session:sessions";
 
-    @Value( "${hazelcast.publicAddress:localhost}" )
+    @Value( "${hazelcast.publicAddress:127.0.0.1}" )
     private String publicAddress;
 
     @Value( "${hazelcast.port:5701}" )
@@ -49,6 +50,10 @@ public class HazelcastHttpSessionConfiguration
         config.getNetworkConfig().setPublicAddress( publicAddress );
         config.getNetworkConfig().setPort( port );
         config.getNetworkConfig().setPortCount( portCount );
+
+        final JoinConfig join = config.getNetworkConfig().getJoin();
+        join.getMulticastConfig().setEnabled( false );
+        join.getTcpIpConfig().addMember( publicAddress ).setRequiredMember( null ).setEnabled( true );
 
         return Hazelcast.newHazelcastInstance( config );
     }
